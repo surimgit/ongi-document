@@ -1,8 +1,8 @@
 # API 기능 세부
 
 ## Auth 모듈
-
-### 로그인 123
+테스트
+### 로그인 
 
 - 클라이언트로부터 요청 (user_Id, user_Password 포함하여)
 1. 클라이언트가 전송한 userId, userPassword 데이터가 유효한 데이터인지 확인
