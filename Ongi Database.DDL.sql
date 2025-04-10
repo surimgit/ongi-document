@@ -228,36 +228,18 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`toss_user_key`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`toss_user_key` (
-  `seqeunce` BIGINT NOT NULL AUTO_INCREMENT,
-  `user_id` VARCHAR(50) NOT NULL,
-  `customer_key` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`seqeunce`),
-  UNIQUE INDEX `customer_key_UNIQUE` (`customer_key` ASC) VISIBLE,
-  UNIQUE INDEX `user_id_UNIQUE` (`user_id` ASC) VISIBLE,
-  CONSTRAINT `toss_user_key_user_id`
-    FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `mydb`.`order`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `mydb`.`order` (
   `order_id` VARCHAR(64) NOT NULL,
-  `customer_key` VARCHAR(50) NOT NULL,
+  `user_id` VARCHAR(50) NOT NULL,
   `amount` INT NOT NULL,
-  `order_name` VARCHAR(255) NOT NULL,
+  `buyer_address` TEXT NOT NULL,
   PRIMARY KEY (`order_id`),
-  UNIQUE INDEX `customer_key_UNIQUE` (`customer_key` ASC) VISIBLE,
-  CONSTRAINT `order_customer_key`
-    FOREIGN KEY (`customer_key`)
-    REFERENCES `mydb`.`toss_user_key` (`customer_key`)
+  UNIQUE INDEX `customer_key_UNIQUE` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `order_user_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
@@ -482,6 +464,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`community_post` (
   `title` TEXT NOT NULL,
   `content` TEXT NOT NULL,
   `liked` INT NOT NULL,
+  `view_count` INT NOT NULL DEFAULT 0,
   PRIMARY KEY (`post_sequence`),
   UNIQUE INDEX `post_sequence_UNIQUE` (`post_sequence` ASC) VISIBLE,
   INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
