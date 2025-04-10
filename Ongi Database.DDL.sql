@@ -5,19 +5,19 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema ongi
 -- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema mydb
+-- Schema ongi
 -- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `mydb` DEFAULT CHARACTER SET utf8 ;
-USE `mydb` ;
+CREATE SCHEMA IF NOT EXISTS `ongi` DEFAULT CHARACTER SET utf8 ;
+USE `ongi` ;
 
 -- -----------------------------------------------------
--- Table `mydb`.`user`
+-- Table `ongi`.`user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`user` (
+CREATE TABLE IF NOT EXISTS `ongi`.`user` (
   `user_id` VARCHAR(20) NOT NULL,
   `nickname` VARCHAR(20) NOT NULL,
   `user_password` VARCHAR(20) NOT NULL,
@@ -43,15 +43,15 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`like_keyword`
+-- Table `ongi`.`like_keyword`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`like_keyword` (
+CREATE TABLE IF NOT EXISTS `ongi`.`like_keyword` (
   `user_id` VARCHAR(20) NOT NULL,
   `keyword` VARCHAR(10) NOT NULL,
   PRIMARY KEY (`user_id`, `keyword`),
   CONSTRAINT `like_keyword_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -59,24 +59,24 @@ COMMENT = '	';
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`badge`
+-- Table `ongi`.`badge`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`badge` (
+CREATE TABLE IF NOT EXISTS `ongi`.`badge` (
   `user_id` VARCHAR(20) NOT NULL,
   `badge` VARCHAR(10) NOT NULL,
   PRIMARY KEY (`user_id`, `badge`),
   CONSTRAINT `badge_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`point_earning_list`
+-- Table `ongi`.`point_earning_list`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`point_earning_list` (
+CREATE TABLE IF NOT EXISTS `ongi`.`point_earning_list` (
   `sequence` INT NOT NULL AUTO_INCREMENT,
   `point` INT NOT NULL,
   `history` TEXT NOT NULL,
@@ -86,16 +86,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`point_earning_list` (
   INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `point_earning_list_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`need_helper`
+-- Table `ongi`.`need_helper`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`need_helper` (
+CREATE TABLE IF NOT EXISTS `ongi`.`need_helper` (
   `reward` TEXT NOT NULL,
   `sequence` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(20) NOT NULL,
@@ -110,16 +110,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`need_helper` (
   INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `need_helper_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`user_review`
+-- Table `ongi`.`user_review`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`user_review` (
+CREATE TABLE IF NOT EXISTS `ongi`.`user_review` (
   `review_sequence` INT NOT NULL AUTO_INCREMENT,
   `reviewed_post_sequence` INT NOT NULL,
   `writer_id` VARCHAR(20) NOT NULL,
@@ -134,26 +134,26 @@ CREATE TABLE IF NOT EXISTS `mydb`.`user_review` (
   INDEX `reviewed_id_idx` (`reviewed_id` ASC) VISIBLE,
   CONSTRAINT `user_review_reviewed_post_sequence`
     FOREIGN KEY (`review_sequence`)
-    REFERENCES `mydb`.`need_helper` (`sequence`)
+    REFERENCES `ongi`.`need_helper` (`sequence`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `user_review_writer_id`
     FOREIGN KEY (`writer_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `user_review_reviewed_id`
     FOREIGN KEY (`reviewed_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`product`
+-- Table `ongi`.`product`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`product` (
+CREATE TABLE IF NOT EXISTS `ongi`.`product` (
   `name` TEXT NOT NULL,
   `sequence` INT NOT NULL AUTO_INCREMENT,
   `seller_id` VARCHAR(20) NOT NULL,
@@ -172,37 +172,37 @@ CREATE TABLE IF NOT EXISTS `mydb`.`product` (
   INDEX `seller_id_idx` (`seller_id` ASC) VISIBLE,
   CONSTRAINT `seller_id`
     FOREIGN KEY (`seller_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`reserved_user`
+-- Table `ongi`.`reserved_user`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`reserved_user` (
+CREATE TABLE IF NOT EXISTS `ongi`.`reserved_user` (
   `product_sequence` INT NOT NULL,
   `user_id` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`product_sequence`, `user_id`),
   INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `reserved_user_product_sequence`
     FOREIGN KEY (`product_sequence`)
-    REFERENCES `mydb`.`product` (`sequence`)
+    REFERENCES `ongi`.`product` (`sequence`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `reserved_user_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`product_review`
+-- Table `ongi`.`product_review`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`product_review` (
+CREATE TABLE IF NOT EXISTS `ongi`.`product_review` (
   `review_sequence` INT NOT NULL AUTO_INCREMENT,
   `product_sequence` INT NOT NULL,
   `user_id` VARCHAR(20) NOT NULL,
@@ -216,21 +216,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`product_review` (
   INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `product_review_product_sequence`
     FOREIGN KEY (`product_sequence`)
-    REFERENCES `mydb`.`product` (`sequence`)
+    REFERENCES `ongi`.`product` (`sequence`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `product_review_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`order`
+-- Table `ongi`.`order`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`order` (
+CREATE TABLE IF NOT EXISTS `ongi`.`order` (
   `order_id` VARCHAR(64) NOT NULL,
   `user_id` VARCHAR(50) NOT NULL,
   `amount` INT NOT NULL,
@@ -239,16 +239,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`order` (
   UNIQUE INDEX `customer_key_UNIQUE` (`user_id` ASC) VISIBLE,
   CONSTRAINT `order_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`order_item`
+-- Table `ongi`.`order_item`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`order_item` (
+CREATE TABLE IF NOT EXISTS `ongi`.`order_item` (
   `order_item_sequence` INT NOT NULL AUTO_INCREMENT,
   `order_id` VARCHAR(64) NOT NULL,
   `product_sequence` INT NOT NULL,
@@ -262,21 +262,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`order_item` (
   INDEX `product_sequence_idx` (`product_sequence` ASC) VISIBLE,
   CONSTRAINT `order_item_order_id`
     FOREIGN KEY (`order_id`)
-    REFERENCES `mydb`.`order` (`order_id`)
+    REFERENCES `ongi`.`order` (`order_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `order_item_product_sequence`
     FOREIGN KEY (`product_sequence`)
-    REFERENCES `mydb`.`product` (`sequence`)
+    REFERENCES `ongi`.`product` (`sequence`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`payment_conform`
+-- Table `ongi`.`payment_conform`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`payment_conform` (
+CREATE TABLE IF NOT EXISTS `ongi`.`payment_conform` (
   `payment_key` VARCHAR(200) NOT NULL,
   `order_id` VARCHAR(64) NOT NULL,
   `status` VARCHAR(20) NOT NULL,
@@ -287,16 +287,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`payment_conform` (
   UNIQUE INDEX `payment_key_UNIQUE` (`payment_key` ASC) VISIBLE,
   CONSTRAINT `payment_conform_order_id`
     FOREIGN KEY (`order_id`)
-    REFERENCES `mydb`.`order` (`order_id`)
+    REFERENCES `ongi`.`order` (`order_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`payment_cancel`
+-- Table `ongi`.`payment_cancel`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`payment_cancel` (
+CREATE TABLE IF NOT EXISTS `ongi`.`payment_cancel` (
   `payment_key` VARCHAR(200) NOT NULL,
   `cancel_amount` INT NOT NULL,
   `cancel_reason` TEXT NOT NULL,
@@ -306,16 +306,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`payment_cancel` (
   UNIQUE INDEX `payment_key_UNIQUE` (`payment_key` ASC) VISIBLE,
   CONSTRAINT `payment_cancel_payment_key`
     FOREIGN KEY (`payment_key`)
-    REFERENCES `mydb`.`payment_conform` (`payment_key`)
+    REFERENCES `ongi`.`payment_conform` (`payment_key`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`payment_transaction`
+-- Table `ongi`.`payment_transaction`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`payment_transaction` (
+CREATE TABLE IF NOT EXISTS `ongi`.`payment_transaction` (
   `transaction_key` VARCHAR(64) NOT NULL,
   `payment_key` VARCHAR(200) NOT NULL,
   `type` VARCHAR(20) NOT NULL,
@@ -327,16 +327,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`payment_transaction` (
   INDEX `payment_key_idx` (`payment_key` ASC) VISIBLE,
   CONSTRAINT `payment_transaction_payment_key`
     FOREIGN KEY (`payment_key`)
-    REFERENCES `mydb`.`payment_conform` (`payment_key`)
+    REFERENCES `ongi`.`payment_conform` (`payment_key`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`shopping_cart`
+-- Table `ongi`.`shopping_cart`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`shopping_cart` (
+CREATE TABLE IF NOT EXISTS `ongi`.`shopping_cart` (
   `shopping_cart_sequence` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(20) NOT NULL,
   `product_sequence` INT NOT NULL,
@@ -348,42 +348,42 @@ CREATE TABLE IF NOT EXISTS `mydb`.`shopping_cart` (
   INDEX `product_sequnece_idx` (`product_sequence` ASC) VISIBLE,
   CONSTRAINT `shopping_cart_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `shopping_cart_product_sequnece`
     FOREIGN KEY (`product_sequence`)
-    REFERENCES `mydb`.`product` (`sequence`)
+    REFERENCES `ongi`.`product` (`sequence`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`wish_list`
+-- Table `ongi`.`wish_list`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`wish_list` (
+CREATE TABLE IF NOT EXISTS `ongi`.`wish_list` (
   `user_id` VARCHAR(20) NOT NULL,
   `product_sequence` INT NOT NULL,
   PRIMARY KEY (`user_id`, `product_sequence`),
   INDEX `product_sequence_idx` (`product_sequence` ASC) VISIBLE,
   CONSTRAINT `wish_list_user`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `wish_list_product_sequence`
     FOREIGN KEY (`product_sequence`)
-    REFERENCES `mydb`.`product` (`sequence`)
+    REFERENCES `ongi`.`product` (`sequence`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`helper_comment`
+-- Table `ongi`.`helper_comment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`helper_comment` (
+CREATE TABLE IF NOT EXISTS `ongi`.`helper_comment` (
   `comment_sequence` INT NOT NULL AUTO_INCREMENT,
   `post_sequence` INT NOT NULL,
   `user_id` VARCHAR(20) NOT NULL,
@@ -395,21 +395,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`helper_comment` (
   INDEX `post_sequence_idx` (`post_sequence` ASC) VISIBLE,
   CONSTRAINT `helper_comment_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `helper_comment_post_sequence`
     FOREIGN KEY (`post_sequence`)
-    REFERENCES `mydb`.`need_helper` (`sequence`)
+    REFERENCES `ongi`.`need_helper` (`sequence`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`chat`
+-- Table `ongi`.`chat`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`chat` (
+CREATE TABLE IF NOT EXISTS `ongi`.`chat` (
   `helper_id` VARCHAR(20) NOT NULL,
   `chat_sequence` INT NOT NULL AUTO_INCREMENT,
   `need_helper_sequence` INT NOT NULL,
@@ -420,21 +420,21 @@ CREATE TABLE IF NOT EXISTS `mydb`.`chat` (
   INDEX `helper_id_idx` (`helper_id` ASC) VISIBLE,
   CONSTRAINT `chat_need_helper_sequence`
     FOREIGN KEY (`need_helper_sequence`)
-    REFERENCES `mydb`.`need_helper` (`sequence`)
+    REFERENCES `ongi`.`need_helper` (`sequence`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `chat_helper_id`
     FOREIGN KEY (`helper_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`message`
+-- Table `ongi`.`message`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`message` (
+CREATE TABLE IF NOT EXISTS `ongi`.`message` (
   `chat_sequence` INT NOT NULL,
   `message_sequence` INT NOT NULL AUTO_INCREMENT,
   `content` TEXT NOT NULL,
@@ -446,7 +446,7 @@ CREATE TABLE IF NOT EXISTS `mydb`.`message` (
   INDEX `chat_sequence_idx` (`chat_sequence` ASC) VISIBLE,
   CONSTRAINT `message_chat_sequence`
     FOREIGN KEY (`chat_sequence`)
-    REFERENCES `mydb`.`chat` (`chat_sequence`)
+    REFERENCES `ongi`.`chat` (`chat_sequence`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -454,9 +454,9 @@ COMMENT = '	';
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`community_post`
+-- Table `ongi`.`community_post`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`community_post` (
+CREATE TABLE IF NOT EXISTS `ongi`.`community_post` (
   `post_sequence` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(20) NOT NULL,
   `post_date` VARCHAR(35) NOT NULL,
@@ -470,16 +470,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`community_post` (
   INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `community_post_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`community_comment`
+-- Table `ongi`.`community_comment`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`community_comment` (
+CREATE TABLE IF NOT EXISTS `ongi`.`community_comment` (
   `comment_sequence` INT NOT NULL AUTO_INCREMENT,
   `post_sequence` INT NOT NULL,
   `user_id` VARCHAR(20) NOT NULL,
@@ -491,63 +491,63 @@ CREATE TABLE IF NOT EXISTS `mydb`.`community_comment` (
   INDEX `post_sequence_idx` (`post_sequence` ASC) VISIBLE,
   CONSTRAINT `community_comment_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `community_comment_post_sequence`
     FOREIGN KEY (`post_sequence`)
-    REFERENCES `mydb`.`community_post` (`post_sequence`)
+    REFERENCES `ongi`.`community_post` (`post_sequence`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`liked`
+-- Table `ongi`.`liked`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`liked` (
+CREATE TABLE IF NOT EXISTS `ongi`.`liked` (
   `user_id` VARCHAR(20) NOT NULL,
   `liked_post_sequence` INT NOT NULL,
   PRIMARY KEY (`user_id`, `liked_post_sequence`),
   INDEX `liked_post_sequence_idx` (`liked_post_sequence` ASC) VISIBLE,
   CONSTRAINT `liked_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `liked_post_sequence`
     FOREIGN KEY (`liked_post_sequence`)
-    REFERENCES `mydb`.`community_post` (`post_sequence`)
+    REFERENCES `ongi`.`community_post` (`post_sequence`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`bookmark`
+-- Table `ongi`.`bookmark`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`bookmark` (
+CREATE TABLE IF NOT EXISTS `ongi`.`bookmark` (
   `user_id` VARCHAR(20) NOT NULL,
   `bookmarked_post_sequence` INT NOT NULL,
   PRIMARY KEY (`user_id`, `bookmarked_post_sequence`),
   INDEX `bookmarked_post_sequence_idx` (`bookmarked_post_sequence` ASC) VISIBLE,
   CONSTRAINT `bookmark_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `bookmarked_post_sequence`
     FOREIGN KEY (`bookmarked_post_sequence`)
-    REFERENCES `mydb`.`community_post` (`post_sequence`)
+    REFERENCES `ongi`.`community_post` (`post_sequence`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`event`
+-- Table `ongi`.`event`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`event` (
+CREATE TABLE IF NOT EXISTS `ongi`.`event` (
   `event_sequence` INT NOT NULL AUTO_INCREMENT,
   `title` TEXT NOT NULL,
   `deadline` VARCHAR(35) NOT NULL,
@@ -560,30 +560,30 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`attender_list`
+-- Table `ongi`.`attender_list`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`attender_list` (
+CREATE TABLE IF NOT EXISTS `ongi`.`attender_list` (
   `attended_event_sequence` INT NOT NULL,
   `user_id` VARCHAR(20) NOT NULL,
   PRIMARY KEY (`attended_event_sequence`, `user_id`),
   INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `attender_list_attended_event_sequence`
     FOREIGN KEY (`attended_event_sequence`)
-    REFERENCES `mydb`.`event` (`event_sequence`)
+    REFERENCES `ongi`.`event` (`event_sequence`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `attender_list_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`question`
+-- Table `ongi`.`question`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`question` (
+CREATE TABLE IF NOT EXISTS `ongi`.`question` (
   `question_sequence` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(20) NOT NULL,
   `post_date` VARCHAR(35) NOT NULL,
@@ -597,16 +597,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`question` (
   INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
   CONSTRAINT `question_user_id`
     FOREIGN KEY (`user_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`report`
+-- Table `ongi`.`report`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`report` (
+CREATE TABLE IF NOT EXISTS `ongi`.`report` (
   `report_sequence` INT NOT NULL AUTO_INCREMENT,
   `reporter_id` VARCHAR(20) NOT NULL,
   `reported_entity_num` INT NOT NULL,
@@ -621,16 +621,16 @@ CREATE TABLE IF NOT EXISTS `mydb`.`report` (
   INDEX `reporter_id_idx` (`reporter_id` ASC) VISIBLE,
   CONSTRAINT `report_reporter_id`
     FOREIGN KEY (`reporter_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `mydb`.`alert`
+-- Table `ongi`.`alert`
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `mydb`.`alert` (
+CREATE TABLE IF NOT EXISTS `ongi`.`alert` (
   `alert_sequence` INT NOT NULL AUTO_INCREMENT,
   `alert_type` VARCHAR(20) NOT NULL,
   `sender_id` VARCHAR(20) NOT NULL,
@@ -642,12 +642,12 @@ CREATE TABLE IF NOT EXISTS `mydb`.`alert` (
   INDEX `sender_id_idx` (`sender_id` ASC) VISIBLE,
   CONSTRAINT `alert_receiver_id`
     FOREIGN KEY (`receiver_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `alert_sender_id`
     FOREIGN KEY (`sender_id`)
-    REFERENCES `mydb`.`user` (`user_id`)
+    REFERENCES `ongi`.`user` (`user_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
