@@ -15,6 +15,7 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema ongi
 -- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `ongi` DEFAULT CHARACTER SET utf8 ;
+USE `ongi` ;
 
 -- -----------------------------------------------------
 -- Table `ongi`.`user`
@@ -23,7 +24,6 @@ CREATE TABLE IF NOT EXISTS `ongi`.`user` (
   `user_id` VARCHAR(20) NOT NULL,
   `nickname` VARCHAR(20) NOT NULL,
   `user_password` VARCHAR(255) NOT NULL,
-  `name` VARCHAR(10) NOT NULL,
   `address` TEXT NULL,
   `detail_address` TEXT NULL,
   `zip_code` INT NULL,
